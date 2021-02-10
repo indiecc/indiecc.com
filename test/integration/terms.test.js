@@ -5,7 +5,7 @@ import tap from 'tap'
 
 const terms = [
   ['service', ['1.0.0']],
-  ['agency', ['2.0.0']],
+  ['seller', ['2.0.0']],
   ['privacy', ['1.0.0']],
   ['free', ['1.1.0']],
   ['paid', ['1.0.0']],

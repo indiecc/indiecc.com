@@ -145,7 +145,7 @@ const staticFiles = [
   'buy.js'
 ]
 
-const terms = ['service', 'agency', 'privacy', 'free', 'paid', 'deal']
+const terms = ['service', 'seller', 'privacy', 'free', 'paid', 'deal']
 
 const staticPages = ['about']
 
@@ -277,7 +277,7 @@ const footer = `
   <a class=spaced href=/deal>Standard Deal</a>
   <a class=spaced href=/pricing>Pricing</a>
   <a class=spaced href=/service>Terms of Service</a>
-  <a class=spaced href=/agency>Agency Terms</a>
+  <a class=spaced href=/seller>Seller Terms</a>
   <a class=spaced href=/privacy>Privacy</a>
   <a class=spaced href=mailto:support@indiecc.com>Support</a>
   <a class=spaced href=https://twitter.com/${constants.twitter}>Twitter</a>
@@ -945,8 +945,8 @@ function serveCreate (request, response) {
               type=checkbox
               value=accepted
               required>
-          Check this box to access the
-          <a href=/agency target=_blank>agency terms</a>.
+          Check this box to accept the
+          <a href=/seller target=_blank>seller terms</a>.
         </label>
         ${data.terms.error}
         <label>
@@ -3204,8 +3204,8 @@ function servePricing (request, response) {
         the company behind ${constants.website}, commission on each sale.
         Commission is currently ${process.env.MINIMUM_COMMISSION}% of
         purchase price for new accounts.
-        See the <a href=/agency#commission>commission
-        section of the agency terms</a> for specifics.
+        See the <a href=/seller#commission>commission
+        section of the seller terms</a> for specifics.
       </p>
       <p>
         Developers also pay for <a href=https://stripe.com>Stripe</a>
