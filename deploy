@@ -1,6 +1,6 @@
 #!/bin/sh
 git push origin
-ssh www@indiecc.com <<'SCRIPT'
+ssh indiecc@indiecc.com <<'SCRIPT'
 cd /var/www/indiecc/
 old_hash="$(shasum package-lock.json)"
 git fetch origin
