@@ -3,6 +3,4 @@ title: About
 summary: company, name, &c.
 ---
 
-## Company
-
-[Artless Devices](https://artlessdevices.com)
+Indie Code Catalog is a project of [Artless Devices](https://artlessdevices.com).
