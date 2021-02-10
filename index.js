@@ -594,12 +594,12 @@ function serveSignUp (request, response) {
             name=urls
             type=url
             placeholder=https://twitter.com/you
-            value="${escapeHTML(data.urls[0] || '')}">
+            value="${escapeHTML(data.urls[1] || '')}">
         <input
             name=urls
             type=url
             placeholder=https://twitch.tv/you
-            value="${escapeHTML(data.urls[0] || '')}">
+            value="${escapeHTML(data.urls[2] || '')}">
         ${data.urls.error}
         <p>Add a URLs for other places to find you on the Web.</p>
         <label for=handle>Handle</label>
@@ -1594,11 +1594,10 @@ function serveProfile (request, response) {
         return done(notFoundError)
       }
       if (account.badges.verified) data.verified = true
-      const fields = ['name', 'location', 'affiliations']
+      const fields = ['name', 'location', 'affiliations', 'urls']
       fields.forEach(field => {
         data[field] = { value: account[field] }
       })
-      if (account.urls[0]) data.url = { value: account.urls[0] }
       done()
     })
   }
@@ -1632,15 +1631,15 @@ function serveProfile (request, response) {
         <input
             name=urls
             type=url
-            value="${escapeHTML(data.urls[0] || '')}">
+            value="${escapeHTML(data.urls.value[0] || '')}">
         <input
             name=urls
             type=url
-            value="${escapeHTML(data.urls[1] || '')}">
+            value="${escapeHTML(data.urls.value[1] || '')}">
         <input
             name=urls
             type=url
-            value="${escapeHTML(data.urls[2] || '')}">
+            value="${escapeHTML(data.urls.value[2] || '')}">
         ${data.urls.error}
         <label for=affiliations>Affiliations</label>
         <input
