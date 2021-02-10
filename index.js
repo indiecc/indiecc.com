@@ -281,7 +281,7 @@ const footer = `
   <a class=spaced href=/privacy>Privacy</a>
   <a class=spaced href=mailto:support@indiecc.com>Support</a>
   <a class=spaced href=https://twitter.com/${constants.twitter}>Twitter</a>
-  <p>Built on <a href=/credits.txt>open code</a>. Source <a href=https://github.com/indiecc/indiecc.com>on GitHub</a>.</p>
+  <p>Software credits <a href=/credits.txt>here</a>. Source <a href=https://github.com/indiecc/indiecc.com>on GitHub</a>.</p>
   <p>
     Icons by <a href=https://fontawesome.com>Font Awesome</a>
     under <a href=https://creativecommons.org/licenses/by/4.0/>CC-BY-4.0</a>.
