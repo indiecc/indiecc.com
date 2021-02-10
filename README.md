@@ -19,3 +19,8 @@ Node.js application.  No framework.  Most action in [`./index.js`](./index.js). 
 - [pandoc](https://pandoc.org) and [pdflatex](https://www.latex-project.org/)
 
 - `npm run test` or `npm run coverage`
+
+## Stripe Settings
+
+- Connect Redirect: `/connected`
+- Webhook: `/stripe-webhook`
