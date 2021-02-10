@@ -1,15 +1,16 @@
 import http from 'http'
 import runSeries from 'run-series'
 import server from './server.js'
+import simpleConcat from 'simple-concat'
 import tap from 'tap'
 
 const terms = [
   ['service', ['1.0.0']],
-  ['seller', ['2.0.0']],
-  ['privacy', ['1.0.0']],
-  ['free', ['1.1.0']],
+  ['seller', ['2.0.1']],
+  ['privacy', ['1.1.0']],
+  ['free', ['1.2.0']],
   ['paid', ['1.0.0']],
-  ['deal', ['1.1.0']]
+  ['deal', ['1.5.1']]
 ]
 
 terms.forEach(testTerms)
@@ -59,3 +60,19 @@ function testTerms ([slug, versions]) {
     })
   })
 }
+
+tap.test('terms feed', test => {
+  server((port, close) => {
+    http.request({ path: '/deal/feed.xml', port })
+      .once('response', response => {
+        test.equal(response.headers['content-type'], 'application/atom+xml', 'Content-Type')
+        simpleConcat(response, (error, buffer) => {
+          test.ifError(error)
+          test.assert(buffer.toString().includes('<?xml version="1.0" encoding="UTF-8"?>'), 'xml')
+          close()
+          test.end()
+        })
+      })
+      .end()
+  })
+})

@@ -2,6 +2,7 @@
 
 import Busboy from 'busboy'
 import FormData from 'form-data'
+import RSS from 'rss'
 import Stripe from 'stripe'
 import URLRegEx from 'url-regex'
 import cfCommonMark from 'commonform-commonmark'
@@ -134,7 +135,7 @@ const icons = []
   .concat(accountBadges.map(badge => badge.icon))
   .concat(projectBadges.map(badge => badge.icon))
   .concat(hostLogos.map(host => host.icon))
-  .concat('user', 'link', 'building', 'map-marker', 'envelope')
+  .concat('user', 'link', 'building', 'map-marker', 'envelope', 'rss')
 
 const staticFiles = [
   'styles.css',
@@ -434,6 +435,9 @@ function serveTerms (request, response, slug) {
     }
     // Serve requested version.
     const version = split[2]
+    if (version === 'feed.xml') {
+      return serveTermsFeed(request, response, slug)
+    }
     fs.readFile(
       path.join('terms', slug, `${version}.md`),
       'utf8',
@@ -445,6 +449,7 @@ function serveTerms (request, response, slug) {
           return serve500(request, response, error)
         }
         const { content, data: { title, summary } } = grayMatter(read)
+        const feedPath = `/${slug}/feed.xml`
         response.setHeader('Content-Type', 'text/html')
         response.end(html`
 <!doctype html>
@@ -452,6 +457,7 @@ function serveTerms (request, response, slug) {
   <head>
     ${meta({ title, description: summary })}
     <title>${escapeHTML(title)}</title>
+    <link rel=alternate href=${feedPath} type=application/atom+xml>
   </head>
   <body>
     ${nav(request)}
@@ -459,6 +465,7 @@ function serveTerms (request, response, slug) {
     <main role=main>
       <h1>${escapeHTML(title)}</h1>
       ${`<p class=version>Version ${version}</p>`}
+      <p><a href=${feedPath}><img class=logo alt=RSS src=/rss.svg>Subscribe to Updates via RSS/Atom</a></p>
       <article class=terms>${markdown(content)}</article>
     </main>
     ${footer}
@@ -470,13 +477,71 @@ function serveTerms (request, response, slug) {
   })
 }
 
+function serveTermsFeed (request, response, slug) {
+  termsVersions(slug, (error, versions) => {
+    if (error) return serve500(request, response, error)
+    const latest = versions.shift()
+    readTermsMeta(slug, latest, (error, latestMeta) => {
+      if (error) return serve500(request, response, error)
+      const feed = new RSS({
+        title: constants.website + ' ' + latestMeta.title,
+        description: 'latest versions of terms',
+        generator: null,
+        site_url: constants.base,
+        feed_url: constants.base + '/' + request.pathname,
+        language: 'en'
+      })
+      addItem(latestMeta, latest)
+      runSeries(versions.map(version => done => {
+        readTermsMeta(slug, versions, (error, meta) => {
+          if (error) return done(error)
+          addItem(meta, version)
+          done()
+        })
+      }), error => {
+        if (error) return serve500(request, response, error)
+        response.setHeader('Content-Type', 'application/atom+xml')
+        response.end(feed.xml())
+      })
+
+      function addItem (meta, version) {
+        feed.item({
+          title: meta.title + ' ' + version,
+          description: meta.summary,
+          date: meta.date,
+          url: `${constants.base}/${slug}/${version}`
+        })
+      }
+    })
+  })
+}
+
+function readTermsMeta (slug, version, callback) {
+  fs.readFile(
+    path.join('terms', slug, `${version}.md`),
+    'utf8',
+    (error, read) => {
+      if (error) return callback(error)
+      const { data } = grayMatter(read)
+      callback(null, data)
+    }
+  )
+}
+
 function latestTermsVersion (basename, callback) {
+  termsVersions(basename, (error, versions) => {
+    if (error) return callback(error)
+    callback(null, versions[0])
+  })
+}
+
+function termsVersions (basename, callback) {
   fs.readdir(path.join('terms', basename), (error, entries) => {
     if (error) return callback(error)
     const versions = entries
       .map(entry => path.basename(entry, '.md'))
       .sort(semver.rcompare)
-    callback(null, versions[0])
+    callback(null, versions)
   })
 }
 

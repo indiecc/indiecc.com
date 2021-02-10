@@ -25,6 +25,7 @@
     "pino-papertrail": "^2.1.0",
     "pump": "^3.0.0",
     "remarkable": "^2.0.1",
+    "rss": "^1.2.2",
     "run-auto": "^2.0.4",
     "run-parallel": "^1.1.10",
     "run-parallel-limit": "^1.0.6",
