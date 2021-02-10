@@ -413,6 +413,7 @@ function serveStaticPage (request, response, slug) {
       <h1>${escapeHTML(title)}</h1>
       ${markdown(content)}
     </main>
+    ${footer}
   </body>
 </html>
       `)
