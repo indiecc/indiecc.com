@@ -983,7 +983,13 @@ function serveCreate (request, response) {
     const { project, urls, price, language, category, pitch, tagline } = body
     const slug = `${handle}/${project}`
     const created = new Date().toISOString()
+    let deal
     runSeries([
+      done => latestTermsVersion('deal', (error, latest) => {
+        if (error) return done(error)
+        deal = latest
+        done()
+      }),
       done => storage.project.create(slug, {
         project,
         handle,
@@ -996,6 +1002,7 @@ function serveCreate (request, response) {
         customers: [],
         badges: {},
         category,
+        deal,
         onSale: true,
         created
       }, (error, success) => {
