@@ -351,10 +351,7 @@ function serveHomepage (request, response) {
     ${header}
     <main role=main>
       <p>
-        ${constants.website} is a simple, open catalog of user-supported public software.
-      </p>
-      <p>
-        All ${constants.website} software is available under a <a href=/deal>standard deal</a>.
+        All software on ${constants.website} is available under a <a href=/deal>standard deal</a>.
         If you use the software to make money or for work, buy a license from the developer.
         Otherwise, you’re free to use and share for free.
         And to offer the same deal for your own software.
