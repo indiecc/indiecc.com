@@ -138,6 +138,7 @@ const icons = []
   .concat('user', 'link', 'building', 'map-marker', 'envelope', 'rss')
 
 const staticFiles = [
+  'ads.txt',
   'styles.css',
   'normalize.css',
   'credits.txt',
