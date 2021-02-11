@@ -32,6 +32,13 @@ simple({
 })
 
 simple({
+  path: '/security.txt',
+  status: 200,
+  mime: 'text/plain; charset=UTF-8',
+  content: 'security@'
+})
+
+simple({
   path: '/nonexistent',
   status: 404,
   mime: 'text/html',

@@ -141,6 +141,7 @@ const staticFiles = [
   'styles.css',
   'normalize.css',
   'credits.txt',
+  'security.txt',
   'logo.svg',
   'logo-on-white-100.png',
   'buy.js'
