@@ -2818,7 +2818,9 @@ function serveProjectForCustomers (request, response) {
         }
       </p>
       <ul class=urls>${data.urls.map(url => `<li>${urlLink(url)}</li>`)}</ul>
-      <p class=price><span id=price class=currency>$${data.price}</span></p>
+      <p><a href=/deal/${data.deal}>Noncommercial Use</a>: Free!</p>
+      <p class=price><a href=/deal/${data.deal}>Commercial Use</a>: <span id=price class=currency>$${data.price}</span></p>
+      <p><a href=/deal/${data.deal}>Thirty-Day Trial</a>: Free!</p>
       <p class=created>Since ${displayDate(data.created)}</p>
       <article class=pitch>${markdown(data.pitch || '', { safe: true })}</article>
       ${customersList(data)}
@@ -3328,6 +3330,7 @@ function redactedProject (project) {
     'badges',
     'category',
     'created',
+    'deal',
     'pitch',
     'handle',
     'language',
