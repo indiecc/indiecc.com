@@ -1,1 +1,1 @@
-Contact: security@artlessdevices.com
+Contact: mailto:security@artlessdevices.com
