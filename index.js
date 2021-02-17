@@ -495,7 +495,7 @@ function serveTermsFeed (request, response, slug) {
       })
       addItem(latestMeta, latest)
       runSeries(versions.map(version => done => {
-        readTermsMeta(slug, versions, (error, meta) => {
+        readTermsMeta(slug, version, (error, meta) => {
           if (error) return done(error)
           addItem(meta, version)
           done()
