@@ -3460,6 +3460,7 @@ function serveStripeWebhook (request, response) {
                     'customer name': order.name,
                     'customer location': order.location,
                     'customer e-mail': order.email,
+                    'software name': order.redactedProjectData.project,
                     'software URL': order.redactedProjectData.urls[0],
                     'software category': order.redactedProjectData.category,
                     price: order.redactedProjectData.price.toString(),
