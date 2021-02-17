@@ -3472,8 +3472,9 @@ function serveStripeWebhook (request, response) {
                     parsed.form,
                     cfPrepareBlanks(blanks, parsed.directions),
                     {
-                      title: parsed.frontMatter.title,
-                      edition: parsed.frontMatter.version,
+                      title: constants.website + ' ' + parsed.frontMatter.title,
+                      edition: 'Version ' + parsed.frontMatter.version,
+                      smartify: true,
                       numbering: outlineNumbering
                     }
                   )
