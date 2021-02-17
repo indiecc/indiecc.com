@@ -3465,7 +3465,7 @@ function serveStripeWebhook (request, response) {
                     'software category': order.redactedProjectData.category,
                     price: order.redactedProjectData.price.toString(),
                     date,
-                    'user count': 1,
+                    users: '1',
                     term: 'forever'
                   }
                   cfDOCX(
