@@ -150,6 +150,8 @@ const staticFiles = [
 
 const terms = ['service', 'seller', 'privacy', 'free', 'paid', 'deal']
 
+const currentUsersTiers = [1, 5, 10, 50]
+
 const staticPages = ['about']
 
 // Function for http.createServer()
@@ -913,7 +915,6 @@ function serveCreate (request, response) {
     tagline: projectTaglineField,
     pitch: projectPitchField,
     urls: urlsField,
-    price: projectPriceField,
     language: projectLanguageField,
     category: projectCategoryField,
     blog: {
@@ -929,6 +930,10 @@ function serveCreate (request, response) {
       validate: e => e === 'accepted'
     }
   }
+
+  currentUsersTiers.forEach(users => {
+    fields['price' + users] = projectPriceField
+  })
 
   formRoute({
     action: '/create',
@@ -996,15 +1001,18 @@ function serveCreate (request, response) {
             value="${escapeHTML(data.urls.value[2] || '')}">
         ${data.urls.error}
         <p>URLs for your project, such as its source code repository and homepage.</p>
-        <label for=price>Price (USD)</label>
-        <input
-          name=price
-          type=number
-          value="${escapeHTML(data.price.value || '')}"
-          min="${MINIMUM_PRICE}"
-          min="${MAXIMUM_PRICE}"
-          required>
-        ${data.price.error}
+        <label>Prices (USD)</label>
+        <table>
+          ${currentUsersTiers.forEach(users => html`
+          <tr>
+            <th>${users} ${users === 1 ? 'User' : 'Users'}</th>
+            <td>
+              ${priceInput({ users, value: data.price.value || '' })}
+              ${data[`price${users}`].error}
+            </td>
+          </tr>
+          `)}
+        </table>
         <p>Cost of <a href=/paid>a license</a> in United States Dollars.</p>
         <label>
           <input
@@ -1047,7 +1055,11 @@ function serveCreate (request, response) {
 
   function processBody (request, body, done) {
     const handle = request.account.handle
-    const { project, urls, price, language, category, pitch, tagline } = body
+    const { project, urls, language, category, pitch, tagline } = body
+    const prices = []
+    currentUsersTiers.forEach(users => {
+      prices.push(body[`price${users}`])
+    })
     const slug = `${handle}/${project}`
     const created = new Date().toISOString()
     let deal
@@ -1064,7 +1076,8 @@ function serveCreate (request, response) {
         pitch,
         language,
         urls,
-        price,
+        prices,
+        tiers: currentUsersTiers,
         commission: process.env.MINIMUM_COMMISSION,
         customers: [],
         badges: {},
@@ -1097,7 +1110,8 @@ function serveCreate (request, response) {
             `Tagline: ${tagline}`,
             `Category: ${category}`,
             `Language: ${language}`,
-            `Price (USD): $${price}`,
+            `Prices (USD): ${prices.map(s => s.toString()).join(', ')}`,
+            `Tiers: ${currentUsersTiers.map(s => s.toString()).join(', ')}`,
             `URLs: ${urls.map(u => `<${u}>`).join(', ')}`,
             `Blog?: ${body.blog}`,
             `Tweet?: ${body.tweet}`,
@@ -1116,6 +1130,18 @@ function serveCreate (request, response) {
     const slug = `${request.account.handle}/${body.project}`
     serve303(request, response, `/~${slug}`)
   }
+}
+
+function priceInput ({ users, value }) {
+  return html`
+<input
+  name=price${users}
+  type=number
+  value="${escapeHTML(value || '')}"
+  min="${MINIMUM_PRICE}"
+  min="${MAXIMUM_PRICE}"
+  required>
+  `
 }
 
 function projectLanguageSelect ({ disabled, value }) {
@@ -2820,7 +2846,15 @@ function serveProjectForCustomers (request, response) {
       <ul class=urls>${data.urls.map(url => `<li>${urlLink(url)}</li>`)}</ul>
       <p class=created>Since ${displayDate(data.created)}</p>
       <p><a href=/deal/${data.deal}>Noncommercial Use</a>: Free!</p>
-      <p class=price><a href=/deal/${data.deal}>Commercial Use</a>: <span id=price class=currency>$${data.price}</span></p>
+      <table id=prices>
+        <caption><a href=/deal/${data.deal}>Commercial Use</a></caption>
+        ${projectTiers.forEach((users, index) => html`
+        <tr>
+          <th>${users} ${users === 1 ? 'User' : 'Users'}</th>
+          <td><span class=currency>$${projectPrices[index]}</span></td>
+        </tr>
+        `)}
+      </table>
       <p><a href=/deal/${data.deal}>Thirty-Day Trial</a>: Free!</p>
       <article class=pitch>${markdown(data.pitch || '', { safe: true })}</article>
       ${customersList(data)}
@@ -2887,7 +2921,7 @@ function customersList (project) {
 }
 
 function buyForm (data) {
-  ['account', 'project', 'name', 'email', 'location', 'terms', 'price']
+  ['account', 'project', 'name', 'email', 'location', 'terms', 'users']
     .forEach(key => {
       if (!data[key]) data[key] = {}
     })
@@ -2899,16 +2933,11 @@ function buyForm (data) {
   <input
       name=handle
       type=hidden
-      autofocus
       value="${escapeHTML(data.handle.value || '')}">
   <input
       name=project
       type=hidden
       value="${escapeHTML(data.project.value || '')}">
-  <input
-      name=price
-      type=hidden
-      value="${escapeHTML(data.price.value || '')}">
   <fieldset>
     <legend>About You</legend>
     <label>
@@ -2943,6 +2972,17 @@ function buyForm (data) {
         required>
     </label>
     ${data.email.error}
+    ${projectTiers.map(users => html`
+    <label for=users>
+      <input
+          type=radio
+          name=users
+          value=${users}
+          ${users === data.users.value && 'checked'}>
+      ${users} ${users === 1 ? 'User' : 'Users'}
+      $${projectPrices[projectTiers.indexOf(users)]} (USD)
+    </label>
+    `)}
   </fieldset>
   <fieldset id=paymentFieldSet>
     <legend>Payment</legend>
@@ -3005,6 +3045,11 @@ function serveBuy (request, response) {
       filter: e => e.toLowerCase().trim(),
       validate: e => EMAIL_RE.test(e)
     },
+    users: {
+      displayName: 'users',
+      filter: e => parseInt(e),
+      validate: e => currentUsersTiers.includes(e)
+    },
     location: {
       displayName: 'location',
       validate: code => locations.includes(code)
@@ -3050,7 +3095,7 @@ function serveBuy (request, response) {
   }
 
   function processBody (request, body, done) {
-    const { handle, project, name, email, location, token, price } = body
+    const { handle, project, name, email, location, token, price, users } = body
     let accountData, redactedProjectData, unredactedProjectData
     let orderID, paymentIntent
     const date = new Date().toISOString()
@@ -3334,7 +3379,8 @@ function redactedProject (project) {
     'pitch',
     'handle',
     'language',
-    'price',
+    'prices',
+    'tiers',
     'project',
     'onSale',
     'tagline',
@@ -3688,6 +3734,23 @@ function passwordRepeatInput () {
     required
     autocomplete=off>
   `
+}
+
+function usersTierInput ({ value }) {
+  let returned = ''
+  currentUsersTiers.forEach(users => {
+    returned += html`
+<label for=users>
+  <input
+      type=radio
+      name=users
+      value=${users}
+      ${users === value && 'checked'}>
+  ${users} ${users === 1 ? 'User' : 'Users'}
+</label>
+    `
+  })
+  return returned
 }
 
 // Helper Function for HTML Form Endpoints
