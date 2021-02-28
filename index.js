@@ -1028,12 +1028,15 @@ function serveCreate (request, response) {
         ${data.urls.error}
         <p>URLs for your project, such as its source code repository and homepage.</p>
         <label for=prices>Prices (USD)</label>
+        <p>Costs of <a href=/paid>licenses</a> in United States Dollars.</p>
+        <p>A license for five must cost more than a license for one, and so on.</p>
         ${currentUsersTiers.map((users, index) => html`
         <label>
           ${users} ${users === 1 ? 'User' : 'Users'}
           <input
             name=prices
             type=number
+            placeholder=${users * 10}
             value="${escapeHTML(data.prices.value[index] || '')}"
             min="${MINIMUM_PRICE}"
             min="${MAXIMUM_PRICE}"
@@ -1041,7 +1044,6 @@ function serveCreate (request, response) {
         </label>
         `)}
         ${data.prices.error}
-        <p>Cost of <a href=/paid>a license</a> in United States Dollars.</p>
         <label>
           <input
               name=terms
