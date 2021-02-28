@@ -2970,13 +2970,14 @@ function buyForm (data) {
   <fieldset>
     <legend>About You</legend>
     <label>
-      Your Legal Name
+      Legal Name
       <input
         name=name
         type=text
         value="${escapeHTML(data.name.value)}"
         required>
     </label>
+    <p>If you’re buying a license for yourself, enter your legal name. If you’re buying a license for a company or other organization, enter the company’s legal name.</p>
     ${data.name.error}
     <label>
       Location
@@ -2991,6 +2992,7 @@ function buyForm (data) {
     <datalist id=locations>
       ${locationOptions()}
     </datalist>
+    <p>If you’re buying a license for yourself, enter the place where you live. If you’re buying a license for a company or other organization, enter the jurisdiction under whose law the organization was formed.  In the United States, companies are often formed as corporations under Delaware law or limitied liability companies formed under the law of the state where they’re based.</p>
     ${data.location.error}
     <label>
       E-Mail
