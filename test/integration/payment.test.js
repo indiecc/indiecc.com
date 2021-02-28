@@ -13,7 +13,7 @@ const password = 'ana password'
 const email = 'ana@example.com'
 const project = 'apple'
 const url = 'http://example.com'
-const price = 100
+const prices = [10, 50, 100, 500]
 const category = 'library'
 
 // https://stripe.com/docs/testing
@@ -39,7 +39,7 @@ interactive('declined cards', async ({ page, port, test }) => {
   // Confirm connected.
   const disconnectText = await page.textContent('#disconnect')
   test.equal(disconnectText, 'Disconnect Stripe Account', 'connected')
-  await createProject({ page, port, project, urls: [url], price, category })
+  await createProject({ page, port, project, urls: [url], prices, category })
   test.pass('created project')
   await logout({ page, port })
   test.pass('logged out')
@@ -72,7 +72,7 @@ interactive('3D Secure card', async ({ page, port, test }) => {
   // Confirm connected.
   const disconnectText = await page.textContent('#disconnect')
   test.equal(disconnectText, 'Disconnect Stripe Account', 'connected')
-  await createProject({ page, port, project, urls: [url], price, category })
+  await createProject({ page, port, project, urls: [url], prices, category })
   await logout({ page, port })
   // Buy licenses.
   await buy({

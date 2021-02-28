@@ -18,11 +18,8 @@ export default (label, logic, port = 0) => {
         } catch (error) {
           test.ifError(error)
         } finally {
-          if (browser) {
-            browser.close().finally(() => test.end())
-          } else {
-            test.end()
-          }
+          if (browser) await browser.close()
+          test.end()
         }
       })()
     }, port)

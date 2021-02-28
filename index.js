@@ -371,7 +371,7 @@ function serveHomepage (request, response) {
           ${badgesList(entry, ['featured'])}
           <span class=tagline>${escapeHTML(entry.tagline)}</span>
           <span class=langauge>${escapeHTML(entry.language)}</span>
-          <span class=currency>$${entry.price}</span>
+          <span class=currency>$${entry.prices[0]}</span>
           <a
               class=byline
               href=/~${entry.handle}
@@ -570,10 +570,10 @@ const urlsField = {
   array: 3,
   displayNames: 'URLs',
   filter: e => e.trim(),
-  validate: e => e.length < 128 && URLRegEx({
+  validate: array => array.every(e => e.length < 128 && URLRegEx({
     exact: true,
     strict: true
-  }).test(e)
+  }).test(e))
 }
 
 function serveSignUp (request, response) {
@@ -841,7 +841,7 @@ function randomNonce () {
   return crypto.randomBytes(32).toString('hex')
 }
 
-// Project Price Constraints
+// Price Constraints
 const MINIMUM_PRICE = 3
 const MAXIMUM_PRICE = 9999
 
@@ -857,10 +857,39 @@ const projectCategories = [
   'interpreter'
 ]
 
-const projectPriceField = {
-  displayName: 'price',
+const projectPricesField = {
+  array: currentUsersTiers.length,
+  displayNames: 'Prices',
   filter: e => parseInt(e),
-  validate: e => !isNaN(e) && e >= MINIMUM_PRICE
+  validate: array => {
+    return (
+      array.every(e => !isNaN(e) && e >= MINIMUM_PRICE) &&
+      increasing(array)
+    )
+  }
+}
+
+// This field description is the same as `projectPricesField`,
+// except it does not enforce MINIMUM_PRICE.  MINIMUM_PRICE
+// may change over time.  We do not want to reject valid buy
+// requests at price points that are now below the going minimum.
+const projectExistingPricesField = {
+  array: currentUsersTiers.length,
+  displayNames: 'Prices',
+  filter: e => parseInt(e),
+  validate: array => {
+    return (
+      array.every(e => !isNaN(e) && e >= 0) &&
+      increasing(array)
+    )
+  }
+}
+
+function increasing (arrayOfNumbers) {
+  return arrayOfNumbers.every((element, index) => {
+    if (index === 0 || index === arrayOfNumbers.length - 1) return true
+    return arrayOfNumbers[index] > arrayOfNumbers[index - 1]
+  })
 }
 
 const projectCategoryField = {
@@ -925,15 +954,12 @@ function serveCreate (request, response) {
       displayname: 'tweet',
       boolean: true
     },
+    prices: projectPricesField,
     terms: {
       displayName: 'terms checkbox',
       validate: e => e === 'accepted'
     }
   }
-
-  currentUsersTiers.forEach(users => {
-    fields['price' + users] = projectPriceField
-  })
 
   formRoute({
     action: '/create',
@@ -1001,18 +1027,20 @@ function serveCreate (request, response) {
             value="${escapeHTML(data.urls.value[2] || '')}">
         ${data.urls.error}
         <p>URLs for your project, such as its source code repository and homepage.</p>
-        <label>Prices (USD)</label>
-        <table>
-          ${currentUsersTiers.forEach(users => html`
-          <tr>
-            <th>${users} ${users === 1 ? 'User' : 'Users'}</th>
-            <td>
-              ${priceInput({ users, value: data.price.value || '' })}
-              ${data[`price${users}`].error}
-            </td>
-          </tr>
-          `)}
-        </table>
+        <label for=prices>Prices (USD)</label>
+        ${currentUsersTiers.map((users, index) => html`
+        <label>
+          ${users} ${users === 1 ? 'User' : 'Users'}
+          <input
+            name=prices
+            type=number
+            value="${escapeHTML(data.prices.value[index] || '')}"
+            min="${MINIMUM_PRICE}"
+            min="${MAXIMUM_PRICE}"
+            required>
+        </label>
+        `)}
+        ${data.prices.error}
         <p>Cost of <a href=/paid>a license</a> in United States Dollars.</p>
         <label>
           <input
@@ -1055,11 +1083,7 @@ function serveCreate (request, response) {
 
   function processBody (request, body, done) {
     const handle = request.account.handle
-    const { project, urls, language, category, pitch, tagline } = body
-    const prices = []
-    currentUsersTiers.forEach(users => {
-      prices.push(body[`price${users}`])
-    })
+    const { project, urls, language, category, pitch, tagline, prices } = body
     const slug = `${handle}/${project}`
     const created = new Date().toISOString()
     let deal
@@ -1130,18 +1154,6 @@ function serveCreate (request, response) {
     const slug = `${request.account.handle}/${body.project}`
     serve303(request, response, `/~${slug}`)
   }
-}
-
-function priceInput ({ users, value }) {
-  return html`
-<input
-  name=price${users}
-  type=number
-  value="${escapeHTML(value || '')}"
-  min="${MINIMUM_PRICE}"
-  min="${MAXIMUM_PRICE}"
-  required>
-  `
 }
 
 function projectLanguageSelect ({ disabled, value }) {
@@ -2464,7 +2476,7 @@ function serveUserPage (request, response) {
     ${badgesList(selling)}
     <span class=tagline>${escapeHTML(selling.tagline)}</span>
     <span class=language>${escapeHTML(selling.language)}</span>
-    <span class=currency>$${selling.price}</span>
+    <span class=currency>$${selling.prices[0]}</span>
   </li>
   `)}
 </ul>
@@ -2654,9 +2666,9 @@ function serveProjectForDeveloper (request, response) {
     tagline: projectTaglineField,
     pitch: projectPitchField,
     urls: urlsField,
-    price: projectPriceField,
     language: projectLanguageField,
-    category: projectCategoryField
+    category: projectCategoryField,
+    prices: projectPricesField
   }
 
   formRoute({
@@ -2758,14 +2770,20 @@ function serveProjectForDeveloper (request, response) {
             ${data.verified && 'disabled'}
             value="${escapeHTML(data.urls.value[2] || '')}">
         ${data.urls.error}
-        <label for=price>Price (USD)</label>
-        <input
-          name=price
-          type=number
-          value="${escapeHTML(data.price.value || '')}"
-          min="${MINIMUM_PRICE}"
-          min="${MAXIMUM_PRICE}"
-          required>
+        <label for=prices>Prices (USD)</label>
+        ${data.projectObject.tiers.map((users, index) => html`
+          <label>
+            ${users} ${users === 1 ? 'User' : 'Users'}
+            <input
+              name=prices
+              type=number
+              value="${escapeHTML(data.prices.value[index].toString() || '')}"
+              min="${MINIMUM_PRICE}"
+              min="${MAXIMUM_PRICE}"
+              required>
+          </label>
+        `)}
+        ${data.prices.error}
         <button type=submit>Update</button>
       </form>
     </main>
@@ -2778,7 +2796,7 @@ function serveProjectForDeveloper (request, response) {
   function processBody (request, body, done) {
     storage.project.update(slug, (project, done) => {
       if (project.badges.verified) {
-        project.price = body.price
+        project.prices = body.prices
         project.pitch = body.pitch
         project.tagline = body.tagline
         project.onSale = body.onSale === 'true'
@@ -2848,12 +2866,16 @@ function serveProjectForCustomers (request, response) {
       <p><a href=/deal/${data.deal}>Noncommercial Use</a>: Free!</p>
       <table id=prices>
         <caption><a href=/deal/${data.deal}>Commercial Use</a></caption>
-        ${projectTiers.forEach((users, index) => html`
+        ${project.tiers.map((users, index) => html`
         <tr>
           <th>${users} ${users === 1 ? 'User' : 'Users'}</th>
-          <td><span class=currency>$${projectPrices[index]}</span></td>
+          <td><span id=price${users} class=currency>$${project.prices[index]}</span> (USD)</td>
         </tr>
         `)}
+        <tr>
+          <th>&gt;${project.tiers[project.tiers.length - 1]} Users</th>
+          <td><a href=/~${handle}>Contact the developer!</a></td>
+        </tr>
       </table>
       <p><a href=/deal/${data.deal}>Thirty-Day Trial</a>: Free!</p>
       <article class=pitch>${markdown(data.pitch || '', { safe: true })}</article>
@@ -2870,7 +2892,8 @@ function serveProjectForCustomers (request, response) {
             email: accountValue('email'),
             handle: { value: data.account.handle },
             project: { value: data.project },
-            price: { value: data.price }
+            prices: { value: project.prices },
+            tiers: { value: project.tiers }
           })
           : '<p>Licenses are not available for sale at this time.</p>'
       }
@@ -2921,10 +2944,14 @@ function customersList (project) {
 }
 
 function buyForm (data) {
-  ['account', 'project', 'name', 'email', 'location', 'terms', 'users']
-    .forEach(key => {
-      if (!data[key]) data[key] = {}
-    })
+  const scalarKeys = ['account', 'project', 'name', 'email', 'location', 'terms', 'users']
+  scalarKeys.forEach(key => {
+    if (!data[key]) data[key] = { value: '' }
+  })
+  const arrayKeys = ['prices', 'tiers']
+  arrayKeys.forEach(key => {
+    if (!data[key]) data[key] = { value: [] }
+  })
   return html`
 <form id=buyForm action=/buy method=post>
   <h3>Buy a License</h3>
@@ -2933,11 +2960,11 @@ function buyForm (data) {
   <input
       name=handle
       type=hidden
-      value="${escapeHTML(data.handle.value || '')}">
+      value="${escapeHTML(data.handle.value)}">
   <input
       name=project
       type=hidden
-      value="${escapeHTML(data.project.value || '')}">
+      value="${escapeHTML(data.project.value)}">
   <fieldset>
     <legend>About You</legend>
     <label>
@@ -2945,7 +2972,7 @@ function buyForm (data) {
       <input
         name=name
         type=text
-        value="${escapeHTML(data.name.value || '')}"
+        value="${escapeHTML(data.name.value)}"
         required>
     </label>
     ${data.name.error}
@@ -2954,7 +2981,7 @@ function buyForm (data) {
       <input
         name=location
         type=text
-        value="${escapeHTML(data.location.value || '')}"
+        value="${escapeHTML(data.location.value)}"
         list=locations
         autocomplete=off
         required>
@@ -2968,22 +2995,36 @@ function buyForm (data) {
       <input
         name=email
         type=email
-        value="${escapeHTML(data.email.value || '')}"
+        value="${escapeHTML(data.email.value)}"
         required>
     </label>
     ${data.email.error}
-    ${projectTiers.map(users => html`
+    ${data.tiers.value.map((users, index) => html`
     <label for=users>
       <input
           type=radio
           name=users
-          value=${users}
+          id="users${users}"
+          value="${users}"
           ${users === data.users.value && 'checked'}>
       ${users} ${users === 1 ? 'User' : 'Users'}
-      $${projectPrices[projectTiers.indexOf(users)]} (USD)
+      $${data.prices.value[index]} (USD)
     </label>
     `)}
+    ${data.users.error}
   </fieldset>
+  ${data.prices.value.map(price => html`
+  <input
+      type=hidden
+      name=prices
+      value="${price}">
+  `)}
+  ${data.tiers.value.map((users, index) => html`
+  <input
+      type=hidden
+      name=tiers
+      value="${users}">
+  `)}
   <fieldset id=paymentFieldSet>
     <legend>Payment</legend>
     <div id=card></div>
@@ -3024,7 +3065,6 @@ function serveBuy (request, response) {
   const action = '/buy'
 
   const fields = {
-    price: projectPriceField,
     handle: {
       displayName: 'handle',
       filter: e => e.toLowerCase().trim(),
@@ -3050,6 +3090,17 @@ function serveBuy (request, response) {
       filter: e => parseInt(e),
       validate: e => currentUsersTiers.includes(e)
     },
+    prices: projectExistingPricesField,
+    tiers: {
+      array: currentUsersTiers.length,
+      filter: e => parseInt(e),
+      validate: array => {
+        return (
+          array.every(users => !isNaN(users) && users > 0) &&
+          increasing(array)
+        )
+      }
+    },
     location: {
       displayName: 'location',
       validate: code => locations.includes(code)
@@ -3066,6 +3117,7 @@ function serveBuy (request, response) {
 
   formRoute({
     action,
+    postOnly: true,
     fields,
     form,
     processBody,
@@ -3095,9 +3147,9 @@ function serveBuy (request, response) {
   }
 
   function processBody (request, body, done) {
-    const { handle, project, name, email, location, token, price, users } = body
+    const { handle, project, name, email, location, token, prices, users } = body
     let accountData, redactedProjectData, unredactedProjectData
-    let orderID, paymentIntent
+    let orderID, paymentIntent, price
     const date = new Date().toISOString()
     runSeries([
       // Read account.
@@ -3136,12 +3188,29 @@ function serveBuy (request, response) {
         })
       },
 
-      // Make sure price hasn't changed.
+      // Make sure prices haven't changed.  This could happen with
+      // timelines like so:
+      // 1.  Customer loads buy page.
+      // 2.  Developer updates pricing.
+      // 3.  Customer submits buy page.
       done => {
-        if (redactedProjectData.price !== parseInt(price)) {
-          const priceError = new Error('price changed')
-          priceError.statusCode = 400
-          return done(priceError)
+        const match = redactedProjectData.prices.every((price, index) => {
+          return price === prices[index]
+        })
+        if (!match) {
+          const pricesError = new Error('prices have changed')
+          pricesError.statusCode = 400
+          return done(pricesError)
+        }
+        done()
+      },
+
+      // Make sure users count is valid.
+      done => {
+        if (!redactedProjectData.tiers.includes(parseInt(users))) {
+          const usersError = new Error('invalid users limit')
+          usersError.statusCode = 400
+          return done(usersError)
         }
         done()
       },
@@ -3159,6 +3228,8 @@ function serveBuy (request, response) {
       // Create an order.
       done => {
         orderID = uuid()
+        const tierIndex = redactedProjectData.tiers.indexOf(users)
+        price = redactedProjectData.prices[tierIndex]
         storage.order.create(orderID, {
           orderID,
           date,
@@ -3167,6 +3238,8 @@ function serveBuy (request, response) {
           name,
           email,
           location,
+          users,
+          price,
           redactedProjectData,
           fulfilled: false
         }, error => {
@@ -3181,7 +3254,7 @@ function serveBuy (request, response) {
 
       // https://stripe.com/docs/connect/destination-charges
       done => {
-        const amount = redactedProjectData.price * 100
+        const amount = price * 100
         request.log.info({ amount }, 'charge amount')
         const stripeID = accountData.stripe.token.stripe_user_id
         const options = {
@@ -3509,9 +3582,9 @@ function serveStripeWebhook (request, response) {
                     'software name': order.redactedProjectData.project,
                     'software URL': order.redactedProjectData.urls[0],
                     'software category': order.redactedProjectData.category,
-                    price: order.redactedProjectData.price.toString(),
+                    price: order.price.toString(),
+                    users: order.users.toString(),
                     date,
-                    users: '1',
                     term: 'forever'
                   }
                   cfDOCX(
@@ -3574,7 +3647,8 @@ function serveStripeWebhook (request, response) {
               handle,
               project,
               orderID,
-              price: order.redactedProjectData.price,
+              price: order.price,
+              users: order.users,
               signature
             }, error => {
               if (error) return done(error)
@@ -3736,23 +3810,6 @@ function passwordRepeatInput () {
   `
 }
 
-function usersTierInput ({ value }) {
-  let returned = ''
-  currentUsersTiers.forEach(users => {
-    returned += html`
-<label for=users>
-  <input
-      type=radio
-      name=users
-      value=${users}
-      ${users === value && 'checked'}>
-  ${users} ${users === 1 ? 'User' : 'Users'}
-</label>
-    `
-  })
-  return returned
-}
-
 // Helper Function for HTML Form Endpoints
 function formRoute ({
   action,
@@ -3762,6 +3819,7 @@ function formRoute ({
   fields,
   fieldSizeLimit = 512000,
   processBody,
+  postOnly = false,
   onPost,
   onSuccess
 }) {
@@ -3794,6 +3852,7 @@ function formRoute ({
   return (request, response) => {
     const method = request.method
     const isGet = method === 'GET'
+    if (isGet && postOnly) return serve405(request, response)
     const isPost = !isGet && method === 'POST'
     if (!isGet && !isPost) return serve405(request, response)
     proceed()
@@ -3967,7 +4026,7 @@ function parseAndValidatePostBody ({
         )
       ) continue
       const valid = isArray
-        ? value.every(value => description.validate(value || '', body))
+        ? description.validate(value || [])
         : description.validate(value || '', body)
       if (valid) continue
       const invalidError = new Error('invalid ' + description.displayName)

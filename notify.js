@@ -78,6 +78,7 @@ export const license = ({
   project,
   orderID,
   signature,
+  users,
   price
 }, callback) => {
   send({
@@ -93,6 +94,8 @@ A copy of your license is attached.
 Project: <${process.env.BASE_HREF}/~${handle}/${project}>
 
 Price: $${price.toString()}
+
+Users: ${users.toString()}
 
 Order ID: \`${orderID}\`
 
