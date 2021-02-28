@@ -12,7 +12,7 @@ import timeout from './timeout.js'
 
 const project = 'apple'
 const urls = ['http://example.com']
-const price = 11
+const prices = [11, 50, 100, 500]
 const category = 'library'
 
 interactive('user page', async ({ page, port, test }) => {
@@ -33,7 +33,7 @@ interactive('user page', async ({ page, port, test }) => {
 
   // Create project.
   await login({ page, port, handle, password })
-  await createProject({ page, port, project, urls, price, category })
+  await createProject({ page, port, project, urls, prices, category })
 
   // Find project link on user page.
   await page.goto(`http://localhost:${port}/~${handle}`)
@@ -66,7 +66,7 @@ interactive('user page licenses', async ({ page, port, test }) => {
   await page.waitForSelector('#disconnect')
 
   // Create project.
-  await createProject({ page, port, project, urls, price, category })
+  await createProject({ page, port, project, urls, prices, category })
   await logout({ page, port })
 
   // As Bob...
@@ -85,6 +85,9 @@ interactive('user page licenses', async ({ page, port, test }) => {
 
   const locationValue = await page.getAttribute('#buyForm input[name=location]', 'value')
   test.equal(locationValue, bob.location, 'prefilled location')
+
+  // Choose users.
+  await page.check('#users1')
 
   // Enter credit card information.
   await pay({ page })

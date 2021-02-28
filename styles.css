@@ -280,3 +280,7 @@ h2 {
   text-align: center;
   width: 100%;
 }
+
+caption {
+  text-align: left;
+}

@@ -11,13 +11,14 @@ export default async ({
     `https://github.com/example/${project}`,
     `http://example.com/${project}`
   ],
-  price,
+  prices = [10, 50, 100, 500],
   category = 'library'
 }) => {
   assert(page)
   assert(Number.isSafeInteger(port))
   assert(typeof project === 'string')
-  assert(Number.isSafeInteger(price))
+  assert(Array.isArray(prices))
+  assert(prices.every(price => typeof price === 'number'))
   assert(typeof category === 'string')
   await page.goto('http://localhost:' + port)
   await page.click('#account')
@@ -30,7 +31,10 @@ export default async ({
   for (let index = 0; index < urls.length; index++) {
     await urlInputs[index].fill(urls[index])
   }
-  await page.fill(`${createForm} input[name="price"]`, price.toString())
+  const pricesInputs = await page.$$('input[name="prices"]')
+  for (let index = 0; index < pricesInputs.length; index++) {
+    await pricesInputs[index].fill(prices[index].toString())
+  }
   await page.selectOption(`${createForm} select[name="language"]`, language)
   await page.selectOption(`${createForm} select[name="category"]`, category)
   await page.click(`${createForm} input[name=terms]`)

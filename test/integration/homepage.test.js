@@ -18,7 +18,8 @@ tap.test('homepage', test => {
         project,
         handle,
         urls: ['http://example.com'],
-        price: 7,
+        prices: [10, 50, 100, 500],
+        tiers: [1, 5, 10, 100],
         badges: {},
         category: 'library',
         created: new Date().toISOString()
