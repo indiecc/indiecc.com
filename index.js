@@ -28,7 +28,7 @@ import https from 'https'
 import iso31662 from 'iso-3166-2'
 import locations from './locations.js'
 import mail from './mail.js'
-import markdown from './markdown.js'
+import markdown from 'kemarkdown'
 import * as notify from './notify.js'
 import outlineNumbering from 'outline-numbering'
 import parseJSON from 'json-parse-errback'
@@ -416,7 +416,7 @@ function serveStaticPage (request, response, slug) {
     ${header}
     <main role=main>
       <h1>${escapeHTML(title)}</h1>
-      ${markdown(content)}
+      ${markdown(content, { unsafe: true })}
     </main>
     ${footer}
   </body>
@@ -470,7 +470,7 @@ function serveTerms (request, response, slug) {
       <h1>${escapeHTML(title)}</h1>
       ${`<p class=version>Version ${version}</p>`}
       <p><a href=${feedPath}><img class=logo alt=RSS src=/rss.svg>Subscribe to Updates via RSS/Atom</a></p>
-      <article class=terms>${markdown(content)}</article>
+      <article class=terms>${markdown(content, { unsafe: true })}</article>
     </main>
     ${footer}
   </body>
@@ -2880,7 +2880,7 @@ function serveProjectForCustomers (request, response) {
         </tr>
       </table>
       <p><a href=/deal/${data.deal}>Thirty-Day Trial</a>: Free!</p>
-      <article class=pitch>${markdown(data.pitch || '', { safe: true })}</article>
+      <article class=pitch>${markdown(data.pitch || '')}</article>
       ${customersList(data)}
       ${
         readyToSell

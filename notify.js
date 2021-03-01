@@ -3,7 +3,7 @@
 import constants from './constants.js'
 import fs from 'fs'
 import mail from './mail.js'
-import markdown from './markdown.js'
+import markdown from 'kemarkdown'
 import * as storage from './storage.js'
 
 export const confirmEMail = ({ to, handle, url }, callback) => {
@@ -123,7 +123,7 @@ function send ({ from, to, cc, bcc, subject, markup, attachments }, callback) {
     bcc,
     subject,
     text: markup,
-    html: markdown(markup, { safe: true }),
+    html: markdown(markup),
     attachments
   }, callback)
 }
