@@ -452,7 +452,9 @@ function serveTerms (request, response, slug) {
           }
           return serve500(request, response, error)
         }
-        const { content, data: { title, summary } } = grayMatter(read)
+        const { content, data } = grayMatter(read)
+        const { title, summary } = data
+        const filled = insertVariables({ data, content })
         const feedPath = `/${slug}/feed.xml`
         response.setHeader('Content-Type', 'text/html')
         response.end(html`
@@ -470,7 +472,7 @@ function serveTerms (request, response, slug) {
       <h1>${escapeHTML(title)}</h1>
       ${`<p class=version>Version ${version}</p>`}
       <p><a href=${feedPath}><img class=logo alt=RSS src=/rss.svg>Subscribe to Updates via RSS/Atom</a></p>
-      <article class=terms>${markdown(content, { unsafe: true })}</article>
+      <article class=terms>${markdown(filled, { unsafe: true })}</article>
     </main>
     ${footer}
   </body>
@@ -479,6 +481,14 @@ function serveTerms (request, response, slug) {
       }
     )
   })
+}
+
+function insertVariables ({ data, content }) {
+  Object.keys(data).forEach(key => {
+    const re = new RegExp(`{{{${key}}}}`, 'g')
+    content = content.replace(re, data[key])
+  })
+  return content
 }
 
 function serveTermsFeed (request, response, slug) {
