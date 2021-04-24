@@ -13,7 +13,7 @@
     "escape-html": "^1.0.3",
     "form-data": "^4.0.0",
     "gravatar": "^1.8.1",
-    "gray-matter": "^4.0.2",
+    "gray-matter": "^4.0.3",
     "http-hash": "^2.0.1",
     "iso-3166-2": "^1.0.0",
     "json-parse-errback": "^2.0.1",
