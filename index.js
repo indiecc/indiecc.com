@@ -291,7 +291,6 @@ const footer = `
     Icons by <a href=https://fontawesome.com>Font Awesome</a>
     under <a href=https://creativecommons.org/licenses/by/4.0/>CC-BY-4.0</a>.
   </p>
-  </section>
 </footer>
 `
 
