@@ -56,7 +56,6 @@
     "tap": "^15.0.5"
   },
   "tap": {
-    "no-esm": true,
     "no-timeout": true,
     "reporter": "tap",
     "jobs": 1
