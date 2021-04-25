@@ -2,7 +2,7 @@
 
 export default {
   website: 'Indie Code Catalog',
-  slogan: 'the user-supported public software marketplace',
+  slogan: 'user-supported public software',
   support: 'support@indiecc.com',
   base: 'https://indiecc.com',
   cookie: 'indiecc',
