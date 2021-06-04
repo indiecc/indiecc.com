@@ -836,8 +836,8 @@ function serveSignUp (request, response) {
     ${nav(request)}
     ${header}
     <main role=main>
-      <h2>Success</h2>
-      <p class=message>Check your e-mail for a link to confirm your new account.</p>
+      <h2>Check your e-mail!</h2>
+      <p class=message>Check your e-mail for a link to confirm your new account. You won’t be able to log in until your account is confirmed!</p>
     </main>
     ${footer}
   </body>
