@@ -35,7 +35,7 @@ export const passwordChanged = ({ to }, callback) => {
     to,
     subject: `${constants.website} Password Change`,
     markup: `
-The password for your ${constants.website} account on was changed.
+The password for your ${constants.website} account was changed.
     `.trim()
   }, callback)
 }
