@@ -3,7 +3,7 @@
 export const csrfToken = s => expired(s, days(7))
 export const accountLock = s => expired(s, days(1))
 export const changeEMailToken = s => expired(s, hours(1))
-export const confirmEMailToken = s => expired(s, days(1))
+export const confirmEMailToken = s => expired(s, days(3))
 export const resetPasswordToken = s => expired(s, hours(1))
 
 const actionToExpiration = {
@@ -29,5 +29,5 @@ function hours (hours) {
 function expired (dateString, lifetime) {
   const now = Date.now()
   const date = Date.parse(dateString)
-  return (now - date) > lifetime // days * 24 * 60 * 60 * 1000
+  return (now - date) > lifetime
 }

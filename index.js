@@ -1916,7 +1916,7 @@ function getWithToken (request, response) {
 }
 
 function invalidToken (request, response) {
-  const title = 'Change Password'
+  const title = 'Invalid Token'
   response.statusCode = 400
   response.setHeader('Content-Type', 'text/html')
   return response.end(html`
