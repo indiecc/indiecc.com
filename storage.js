@@ -33,7 +33,7 @@ export const signature = {
     lock('signatures', unlock => {
       callback = unlock(callback)
       fs.appendFile(
-        path.join(process.env.DIRECTORY, 'sigantures.csv'),
+        path.join(process.env.DIRECTORY, 'signatures.csv'),
         [date, signature, orderID].join(','),
         callback
       )
@@ -42,7 +42,7 @@ export const signature = {
   createReadStream: () => {
     return pump(
       fs.createReadStream(
-        path.join(process.env.DIRECTORY, 'sigantures.csv'),
+        path.join(process.env.DIRECTORY, 'signatures.csv'),
         'utf8'
       ),
       split2(),
