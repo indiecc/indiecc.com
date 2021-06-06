@@ -2109,7 +2109,7 @@ function serveReset (request, response) {
         <input
             name=handle
             type=text
-            value="${escapeHTML(data.handle.value)}"
+            value="${escapeHTML(data.handle.value || '')}"
             pattern="^${validHandles.pattern}$"
             required
             autofocus
@@ -2971,11 +2971,11 @@ function buyForm (data) {
   <input
       name=handle
       type=hidden
-      value="${escapeHTML(data.handle.value)}">
+      value="${escapeHTML(data.handle.value || '')}">
   <input
       name=project
       type=hidden
-      value="${escapeHTML(data.project.value)}">
+      value="${escapeHTML(data.project.value || '')}">
   <fieldset>
     <legend>About You</legend>
     <label>
@@ -2983,7 +2983,7 @@ function buyForm (data) {
       <input
         name=name
         type=text
-        value="${escapeHTML(data.name.value)}"
+        value="${escapeHTML(data.name.value || '')}"
         required>
     </label>
     <p>If you’re buying a license for yourself, enter your legal name. If you’re buying a license for a company or other organization, enter the company’s legal name.</p>
@@ -2993,7 +2993,7 @@ function buyForm (data) {
       <input
         name=location
         type=text
-        value="${escapeHTML(data.location.value)}"
+        value="${escapeHTML(data.location.value || '')}"
         list=locations
         autocomplete=off
         required>
@@ -3008,7 +3008,7 @@ function buyForm (data) {
       <input
         name=email
         type=email
-        value="${escapeHTML(data.email.value)}"
+        value="${escapeHTML(data.email.value || '')}"
         required>
     </label>
     ${data.email.error}
