@@ -2854,7 +2854,7 @@ function serveProjectForCustomers (request, response) {
 <html lang=en-US>
   <head>
     ${meta({
-      title: data.slug,
+      title: data.project,
       description: data.tagline
     })}
     <title>${data.slug}</title>
