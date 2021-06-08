@@ -16,7 +16,7 @@ export default (label, logic, port = 0) => {
           const page = await context.newPage()
           await logic({ test, page, port })
         } catch (error) {
-          test.ifError(error)
+          test.error(error)
         } finally {
           if (browser) await browser.close()
           test.end()

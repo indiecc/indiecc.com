@@ -38,11 +38,11 @@ tap.test('server', test => {
         })
       }
     ], error => {
-      test.ifError(error, 'no error')
+      test.error(error, 'no error')
       http.request(`http://localhost:${serverPort}`)
         .once('response', response => {
           simpleConcat(response, (error, buffer) => {
-            test.ifError(error, 'no concat error')
+            test.error(error, 'no concat error')
             test.assert(
               buffer.toString().includes(`<h1>${constants.website}</h1>`),
               `output includes <h1>${constants.website}</h1>`

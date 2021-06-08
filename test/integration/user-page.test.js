@@ -131,7 +131,7 @@ interactive('user JSON', async ({ page, port, test }) => {
       .once('response', response => {
         test.equal(response.statusCode, 200, '200')
         simpleConcat(response, (error, buffer) => {
-          test.ifError(error, 'no read error')
+          test.error(error, 'no read error')
           const parsed = JSON.parse(buffer)
           test.equal(parsed.handle, handle, '.handle')
           test.equal(parsed.email, email, '.email')

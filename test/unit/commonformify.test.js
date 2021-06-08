@@ -9,7 +9,7 @@ tap.test('commonformify', test => {
     path.join('terms', 'paid', '1.0.0.md'),
     'utf8',
     (error, read) => {
-      test.ifError(error, 'read error')
+      test.error(error, 'read error')
       const processed = commonformify(read)
       test.doesNotThrow(() => {
         cfCommonMark.parse(processed)

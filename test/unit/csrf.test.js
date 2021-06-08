@@ -8,7 +8,7 @@ tap.test('CSRF round trip', (test) => {
   const sessionID = uuid()
   const { token, nonce } = csrf.generate({ action, sessionID })
   csrf.verify({ action, sessionID, token, nonce }, error => {
-    test.ifError(error)
+    test.error(error)
     test.end()
   })
 })

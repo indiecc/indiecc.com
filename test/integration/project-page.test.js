@@ -132,7 +132,7 @@ interactive('project JSON', async ({ page, port, test }) => {
       .once('response', response => {
         test.equal(response.statusCode, 200, '200')
         simpleConcat(response, (error, buffer) => {
-          test.ifError(error, 'no read error')
+          test.error(error, 'no read error')
           const parsed = JSON.parse(buffer)
           test.equal(parsed.project, project, '.project')
           test.same(parsed.prices, prices, '.prices')

@@ -25,11 +25,11 @@ tap.test('homepage', test => {
         created: new Date().toISOString()
       }, done)
     ], error => {
-      test.ifError(error, 'no error')
+      test.error(error, 'no error')
       http.request({ port })
         .once('response', response => {
           simpleConcat(response, (error, buffer) => {
-            test.ifError(error, 'no concat error')
+            test.error(error, 'no concat error')
             const string = buffer.toString()
             test.doesNotThrow(() => parse5.parse(string), 'valid HTML5')
             test.assert(
