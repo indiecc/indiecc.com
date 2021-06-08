@@ -3764,7 +3764,7 @@ function locationInput (value) {
   ${locationOptions()}
 </datalist>
 <p>The <a href=https://en.wikipedia.org/wiki/ISO_3166-2 target=_blank>ISO 3166-2</a> code for where you pay taxes.</p>
-<p>${constants.website} will publish your location.</p>
+<p>${constants.website} will publish your location on your profile page.</p>
   `
 }
 
@@ -3780,7 +3780,7 @@ function nameInput ({ value, autofocus }) {
     ${autofocus && 'autofocus'}
     required>
 <p>${constants.website} requires your full legal name to document your transactions.</p>
-<p>${constants.website} will publish your name.</p>
+<p>${constants.website} will publish your name on your profile page and on pages of projects you support.</p>
   `
 }
 
@@ -3794,7 +3794,7 @@ function eMailInput ({ value, autofocus }) {
     value="${escapeHTML(value || '')}"
     ${autofocus ? 'autofocus' : ''}
     required>
-<p>${constants.website} will publish your e-mail address and uses it to request your <a href=https://gravatar.com>Gravatar</a>.</p>
+<p>${constants.website} will publish your e-mail address on your profile page and uses it to request your <a href=https://gravatar.com>Gravatar</a>.</p>
 <p>Feel free to use a ${constants.website}-specific address or mail alias.</p>
   `
 }
