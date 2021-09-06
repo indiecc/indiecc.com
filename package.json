@@ -38,7 +38,7 @@
     "split2": "^3.2.2",
     "stripe": "^8.174.0",
     "through2": "^4.0.2",
-    "url-parse": "^1.5.1",
+    "url-parse": "^1.5.3",
     "url-regex-safe": "^2.0.2",
     "uuid": "^8.3.2"
   },
