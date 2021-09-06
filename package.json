@@ -22,7 +22,7 @@
     "nodemailer": "^6.6.3",
     "outline-numbering": "^2.0.0",
     "pino": "^6.13.2",
-    "pino-http": "^5.5.0",
+    "pino-http": "^5.7.0",
     "pino-papertrail": "^2.1.0",
     "pump": "^3.0.0",
     "remarkable": "^2.0.1",
