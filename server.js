@@ -5,6 +5,7 @@ import requestHandler from './index.js'
 import http from 'http'
 import pino from 'pino'
 import pinoHTTP from 'pino-http'
+import toobusy from 'toobusy-js'
 
 // Logging
 
@@ -45,6 +46,10 @@ const server = http.createServer()
 server.on('request', (request, response) => {
   try {
     addLoggers(request, response)
+    if (toobusy()) {
+      response.statusCode = 503
+      response.end('Server Too Busy')
+    }
     requestHandler(request, response)
   } catch (error) {
     request.log.error(error)
