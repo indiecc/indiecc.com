@@ -3984,7 +3984,7 @@ function parseAndValidatePostBody ({
   function parse (done) {
     let parser
     try {
-      parser = new Busboy({
+      parser = Busboy({
         headers: request.headers,
         limits: {
           fieldNameSize: Math.max(
@@ -4021,7 +4021,7 @@ function parseAndValidatePostBody ({
           if (description.array) body[name].push(filteredValue)
           else body[name] = filteredValue
         })
-        .once('finish', done)
+        .once('close', done)
     } catch (error) {
       error.statusCode = 400
       return done(error)
