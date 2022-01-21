@@ -8,7 +8,7 @@
     "commonform-docx": "^5.5.3",
     "commonform-prepare-blanks": "^1.0.2",
     "cookie": "^0.4.1",
-    "creditstxt": "^1.0.2",
+    "creditstxt": "^2.0.0",
     "do-not-cache": "^1.0.1",
     "escape-html": "^1.0.3",
     "form-data": "^4.0.0",
