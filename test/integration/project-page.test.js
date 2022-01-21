@@ -64,10 +64,10 @@ interactive('project page', async ({ page, port, test }) => {
         if (to !== customerEMail) return
         test.equal(to, customerEMail, 'e-mail TO customer')
         test.equal(cc, email, 'e-mail CC developer')
-        test.assert(text.includes(`$${prices[0]}`), 'e-mail includes price')
-        test.assert(attachments.length > 0, 'e-mail has attachment')
-        test.assert(/Order ID: `[a-f0-9-]+`/.test(text), 'e-mail has order ID')
-        test.assert(/Signature: `[a-f0-9]+`/.test(text), 'e-mail has signature')
+        test.ok(text.includes(`$${prices[0]}`), 'e-mail includes price')
+        test.ok(attachments.length > 0, 'e-mail has attachment')
+        test.ok(/Order ID: `[a-f0-9-]+`/.test(text), 'e-mail has order ID')
+        test.ok(/Signature: `[a-f0-9]+`/.test(text), 'e-mail has signature')
         resolve()
       })
     }),
@@ -79,7 +79,7 @@ interactive('project page', async ({ page, port, test }) => {
       }),
       async () => {
         const message = await page.textContent('.message')
-        test.assert(message.includes('Thank you', 'confirmation'))
+        test.ok(message.includes('Thank you', 'confirmation'))
       }
     ])
   ])
@@ -136,8 +136,8 @@ interactive('project JSON', async ({ page, port, test }) => {
           const parsed = JSON.parse(buffer)
           test.equal(parsed.project, project, '.project')
           test.same(parsed.prices, prices, '.prices')
-          test.assert(Array.isArray(parsed.tiers), '.tiers')
-          test.assert(parsed.tiers.every(e => typeof e === 'number'), '.tiers are numbers')
+          test.ok(Array.isArray(parsed.tiers), '.tiers')
+          test.ok(parsed.tiers.every(e => typeof e === 'number'), '.tiers are numbers')
           test.equal(parsed.category, category, '.category')
           test.deepEqual(parsed.urls, urls, '.urls')
           test.equal(typeof parsed.created, 'string', '.created')

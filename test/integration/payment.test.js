@@ -58,7 +58,7 @@ interactive('declined cards', async ({ page, port, test }) => {
     })
     const errorText = await page.textContent('.error')
     const watchWord = testNumbers[number]
-    test.assert(errorText.includes(watchWord), `declined: ${watchWord}`)
+    test.ok(errorText.includes(watchWord), `declined: ${watchWord}`)
   }
 }, 8080)
 
@@ -86,5 +86,5 @@ interactive('3D Secure card', async ({ page, port, test }) => {
     number: '4000000000003220'
   })
   const messageText = await page.textContent('.message')
-  test.assert(messageText.includes('Thank you', 'confirmation'))
+  test.ok(messageText.includes('Thank you', 'confirmation'))
 }, 8080)

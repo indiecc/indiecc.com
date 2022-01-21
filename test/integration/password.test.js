@@ -26,11 +26,11 @@ interactive('change password', async ({ page, port, test }) => {
   await page.fill('#passwordForm input[name="repeat"]', newPassword)
   testEvents.once('sent', ({ to, subject }) => {
     test.equal(to, email, 'email')
-    test.assert(subject.includes('Password'), 'Password')
+    test.ok(subject.includes('Password'), 'Password')
   })
   await page.click('#passwordForm button[type="submit"]')
   const message = await page.textContent('p.message')
-  test.assert(message.includes('changed'), 'changed')
+  test.ok(message.includes('changed'), 'changed')
   await logout({ page, port })
   await login({ page, port, handle, password: newPassword })
   await verifyLogIn({ page, test, port, handle, email })

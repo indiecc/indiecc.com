@@ -36,7 +36,7 @@ interactive('reset password', async ({ page, port, test }) => {
     new Promise((resolve, reject) => {
       testEvents.once('sent', options => {
         test.equal(options.to, email, 'sent mail')
-        test.assert(options.subject.includes('Reset'), 'reset')
+        test.ok(options.subject.includes('Reset'), 'reset')
         url = /<(http:\/\/[^ ]+)>/.exec(options.text)[1]
         resolve()
       })

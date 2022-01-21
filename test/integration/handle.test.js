@@ -31,7 +31,7 @@ interactive('discover handle', async ({ page, port, test }) => {
     new Promise((resolve, reject) => {
       testEvents.once('sent', options => {
         test.equal(options.to, email, 'sent mail')
-        test.assert(options.text.includes(handle), 'mailed handle')
+        test.ok(options.text.includes(handle), 'mailed handle')
         resolve()
       })
     }),

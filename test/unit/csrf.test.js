@@ -19,7 +19,7 @@ tap.test('CSRF action mismatch', (test) => {
   const sessionID = uuid()
   const { token, nonce } = csrf.generate({ action, sessionID })
   csrf.verify({ action: '/login', sessionID, token, nonce }, error => {
-    test.assert(error, 'error')
+    test.ok(error, 'error')
     test.equal(error.field, 'action', 'action')
     test.end()
   })
@@ -31,7 +31,7 @@ tap.test('CSRF session mismatch', (test) => {
   const sessionID = uuid()
   const { token, nonce } = csrf.generate({ action, sessionID })
   csrf.verify({ action, sessionID: uuid(), token, nonce }, error => {
-    test.assert(error, 'error')
+    test.ok(error, 'error')
     test.equal(error.field, 'sessionID', 'sessionID')
     test.end()
   })
@@ -44,7 +44,7 @@ tap.test('CSRF corrupted', (test) => {
   let { token, nonce } = csrf.generate({ action, sessionID })
   token = token.split('').reverse().join('')
   csrf.verify({ action, sessionID: uuid(), token, nonce }, error => {
-    test.assert(error, 'error')
+    test.ok(error, 'error')
     test.equal(error.decryption, true, 'decription')
     test.end()
   })
@@ -57,7 +57,7 @@ tap.test('CSRF round trip', (test) => {
   const date = new Date('2000-01-01').toISOString()
   const { token, nonce } = csrf.generate({ action, sessionID, date })
   csrf.verify({ action, sessionID, token, nonce }, error => {
-    test.assert(error, 'error')
+    test.ok(error, 'error')
     test.equal(error.field, 'date', 'field=date')
     test.equal(error.date, date, 'date')
     test.end()

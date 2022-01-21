@@ -60,7 +60,7 @@ interactive('sign up same handle', async ({ page, port, test }) => {
   await page.fill('#signupForm input[name="repeat"]', password)
   await page.click('#signupForm button[type="submit"]')
   const errorText = await page.textContent('.error')
-  test.assert(errorText.includes('taken'), 'handle taken')
+  test.ok(errorText.includes('taken'), 'handle taken')
 
   const emailValue = await page.getAttribute('input[name="email"]', 'value')
   test.equal(emailValue, secondEMail, 'preserves e-mail value')
@@ -96,5 +96,5 @@ interactive('sign up same email', async ({ page, port, test }) => {
   await page.fill(`${signupForm} input[name="repeat"]`, password)
   await page.click(`${signupForm} button[type="submit"]`)
   const errorText = await page.textContent('.error')
-  test.assert(errorText.includes('e-mail'), 'e-mail')
+  test.ok(errorText.includes('e-mail'), 'e-mail')
 })

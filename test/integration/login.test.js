@@ -46,7 +46,7 @@ interactive('sign in with bad credentials', async ({ page, port, test }) => {
   await page.goto('http://localhost:' + port)
   await login({ page, port, handle: 'invalid', password: 'invalid' })
   const errorText = await page.textContent('p.error')
-  test.assert(errorText.includes('invalid'), 'invalid')
+  test.ok(errorText.includes('invalid'), 'invalid')
 })
 
 interactive('lockout', async ({ page, port, test }) => {

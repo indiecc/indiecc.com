@@ -32,7 +32,7 @@ tap.test('homepage', test => {
             test.error(error, 'no concat error')
             const string = buffer.toString()
             test.doesNotThrow(() => parse5.parse(string), 'valid HTML5')
-            test.assert(
+            test.ok(
               string.includes(`href=/~${handle}/${project}`),
               'links to showcased'
             )

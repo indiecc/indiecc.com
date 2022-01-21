@@ -43,7 +43,7 @@ tap.test('server', test => {
         .once('response', response => {
           simpleConcat(response, (error, buffer) => {
             test.error(error, 'no concat error')
-            test.assert(
+            test.ok(
               buffer.toString().includes(`<h1>${constants.website}</h1>`),
               `output includes <h1>${constants.website}</h1>`
             )

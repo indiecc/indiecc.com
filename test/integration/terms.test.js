@@ -68,7 +68,7 @@ tap.test('terms feed', test => {
         test.equal(response.headers['content-type'], 'application/atom+xml', 'Content-Type')
         simpleConcat(response, (error, buffer) => {
           test.error(error)
-          test.assert(buffer.toString().includes('<?xml version="1.0" encoding="UTF-8"?>'), 'xml')
+          test.ok(buffer.toString().includes('<?xml version="1.0" encoding="UTF-8"?>'), 'xml')
           close()
           test.end()
         })

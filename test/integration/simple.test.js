@@ -128,7 +128,7 @@ function simple ({
           if (content) {
             return simpleConcat(response, (error, body) => {
               test.error(error, 'no error')
-              test.assert(
+              test.ok(
                 body.toString().includes(content),
                 content
               )

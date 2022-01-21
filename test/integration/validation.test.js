@@ -15,10 +15,10 @@ tap.test('handle validation', test => {
   ]
   const validate = validation.handles.validate
   valid.forEach(example => {
-    test.assert(validate(example), `"${example}" valid`)
+    test.ok(validate(example), `"${example}" valid`)
   })
   invalid.forEach(example => {
-    test.assert(!validate(example), `"${example}" invalid`)
+    test.ok(!validate(example), `"${example}" invalid`)
   })
   test.end()
 })
@@ -36,10 +36,10 @@ tap.test('project name validation', test => {
   ]
   const validate = validation.projects.validate
   valid.forEach(example => {
-    test.assert(validate(example), `"${example}" valid`)
+    test.ok(validate(example), `"${example}" valid`)
   })
   invalid.forEach(example => {
-    test.assert(!validate(example), `"${example}" invalid`)
+    test.ok(!validate(example), `"${example}" invalid`)
   })
   test.end()
 })
@@ -53,10 +53,10 @@ tap.test('password validation', test => {
   ]
   const validate = validation.passwords.validate
   valid.forEach(example => {
-    test.assert(validate(example), `"${example}" valid`)
+    test.ok(validate(example), `"${example}" valid`)
   })
   invalid.forEach(example => {
-    test.assert(!validate(example), `"${example}" invalid`)
+    test.ok(!validate(example), `"${example}" invalid`)
   })
   test.end()
 })
