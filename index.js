@@ -36,7 +36,6 @@ import parseURL from 'url-parse'
 import { hash as hashPassword, verify as verifyPassword } from './password-storage.js'
 import path from 'path'
 import programmingLanguages from './programming-languages.js'
-import querystring from 'querystring'
 import runAuto from 'run-auto'
 import runParallel from 'run-parallel'
 import runParallelLimit from 'run-parallel-limit'
@@ -1414,13 +1413,13 @@ function serveAccount (request, response) {
 
   function connectLink () {
     const url = 'https://connect.stripe.com/oauth/authorize?' +
-      querystring.stringify({
+      new URLSearchParams({
         response_type: 'code',
         client_id: environment.STRIPE_CLIENT_ID,
         scope: 'read_write',
         state: account.stripe.connectNonce,
         redirect_uri: `${process.env.BASE_HREF}/connected`
-      })
+      }).toString()
     return `<a id=connect class=button href="${url}">Connect Stripe Account</a>`
   }
 }
