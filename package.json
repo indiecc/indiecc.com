@@ -36,7 +36,7 @@
     "send": "^0.17.2",
     "simple-concat-limit": "^2.0.3",
     "split2": "^3.2.2",
-    "stripe": "^8.178.0",
+    "stripe": "^8.199.0",
     "through2": "^4.0.2",
     "toobusy-js": "^0.5.1",
     "url-parse": "^1.5.3",
