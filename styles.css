@@ -9,21 +9,21 @@ body {
   padding: 1rem;
 }
 
-header[role=banner],
-nav[role=navigation],
-main[role=main],
-footer[role=contentinfo] {
+body > header,
+body > nav,
+body > main,
+body > footer {
   margin-left: auto;
   margin-right: auto;
   max-width: 40rem;
 }
 
-header[role=banner] {
+body > header {
   margin-bottom: 1rem;
   margin-top: 1rem;
 }
 
-header[role=banner] h1 {
+body > header h1 {
   margin-bottom: 0;
   margin-top: 0;
 }
@@ -36,17 +36,17 @@ header[role=banner] h1 {
   max-width: 7rem;
 }
 
-nav[role=navigation] {
+body > nav {
   margin-top: 1rem;
   text-align: right;
 }
 
-main[role=main] {
+body > main {
   margin-bottom: 3rem;
   margin-top: 2rem;
 }
 
-footer[role=contentinfo] {
+body > footer {
   padding-top: 1rem;
   font-size: 80%;
 }
@@ -103,11 +103,11 @@ a[href] .logo {
   vertical-align: middle;
 }
 
-footer[role=contentinfo] {
+body > footer {
   text-align: right;
 }
 
-footer[role=contentinfo] ul {
+body > footer ul {
   list-style-type: none;
   margin: 0;
   padding: 0;

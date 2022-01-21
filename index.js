@@ -269,7 +269,7 @@ function meta ({
 }
 
 const header = `
-<header role=banner>
+<header>
   <a href=/><img src=/logo.svg id=logo alt=logo></a>
   <h1>${constants.website}</h1>
   <p class=slogan>${escapeHTML(constants.slogan)}</p>
@@ -277,7 +277,7 @@ const header = `
 `
 
 const footer = `
-<footer role=contentinfo>
+<footer>
   <a class=spaced href=/about>About</a>
   <a class=spaced href=/deal>Standard Deal</a>
   <a class=spaced href=/pricing>Pricing</a>
@@ -298,7 +298,7 @@ function nav (request) {
   const account = request.account
   const handle = account && account.handle
   return html`
-<nav role=navigation>
+<nav>
   ${!handle && '<a id=login class=button href=/login>Log In</a>'}
   ${!handle && '<a id=signup class=button href=/signup>Sign Up</a>'}
   ${handle && `<a id=profile class=spaced href=/~${handle}>${handle}</a>`}
@@ -353,7 +353,7 @@ function serveHomepage (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <p>
         All software on ${constants.website} is available under a <a href=/deal>standard deal</a>.
         If you use the software to make money or for work, buy a license from the developer.
@@ -413,7 +413,7 @@ function serveStaticPage (request, response, slug) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h1>${escapeHTML(title)}</h1>
       ${markdown(content, { unsafe: true })}
     </main>
@@ -467,7 +467,7 @@ function serveTerms (request, response, slug) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h1>${escapeHTML(title)}</h1>
       ${`<p class=version>Version ${version}</p>`}
       <p><a href=${feedPath}><img class=logo alt=RSS src=/rss.svg>Subscribe to Updates via RSS/Atom</a></p>
@@ -636,7 +636,7 @@ function serveSignUp (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p>Sign up for a ${constants.website} account to track your purchases and offer projects for sale.</p>
       <form id=signupForm method=post>
@@ -835,7 +835,7 @@ function serveSignUp (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>Check your e-mail!</h2>
       <p class=message>Check your e-mail for a link to confirm your new account. You won’t be able to log in until your account is confirmed!</p>
     </main>
@@ -991,7 +991,7 @@ function serveCreate (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <form id=createForm method=post>
         ${data.error}
@@ -1262,7 +1262,7 @@ function serveLogIn (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <form id=loginForm method=post>
         ${data.error}
@@ -1384,7 +1384,7 @@ function serveAccount (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p class=joined>Joined ${displayDate(account.created)}</p>
       ${account.stripe.connected ? disconnectLink() : connectLink()}
@@ -1469,7 +1469,7 @@ function serveHandle (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
     `
     if (data.verified) {
@@ -1526,7 +1526,7 @@ function serveHandle (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p class=message>If the e-mail you entered corresponds to an account, an e-mail was just sent to it.</p>
     </main>
@@ -1582,7 +1582,7 @@ function serveEMail (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
     `
     if (data.verified) {
@@ -1655,7 +1655,7 @@ function serveEMail (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p class=message>Confirmation e-mail sent.</p>
     </main>
@@ -1736,7 +1736,7 @@ function serveProfile (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
     `
     if (data.verified) {
@@ -1839,7 +1839,7 @@ function getAuthenticated (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       ${messageParagraph}
       <form id=passwordForm method=post>
@@ -1891,7 +1891,7 @@ function getWithToken (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       ${messageParagraph}
       <form id=passwordForm method=post>
@@ -1929,7 +1929,7 @@ function invalidToken (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p class=message>The link you followed is invalid or expired.</p>
     </main>
@@ -1995,7 +1995,7 @@ function postPassword (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p class=message>Password changed.</p>
     </main>
@@ -2100,7 +2100,7 @@ function serveReset (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <form id=resetForm method=post>
         ${data.error}
@@ -2161,7 +2161,7 @@ function serveReset (request, response) {
   </head>
   <body>
     ${header}
-    <main role=main>
+    <main>
       <h2>Reset Password</h2>
       <p class=message>An e-mail has been sent.</p>
     </main>
@@ -2231,7 +2231,7 @@ function serveConfirm (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p class=message>The e-mail address for your account was successfully changed.</p>
     </main>
@@ -2360,7 +2360,7 @@ function serveConnected (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>Problem Connecting Stripe</h2>
       <p>Stripe reported an error connecting your account:</p>
       <blockqute><p>${escapeHTML(message)}</p></blockqute>
@@ -2404,7 +2404,7 @@ function serveDisconnect (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>Disconnected Stripe Account</h2>
       <p class=message>Stripe has been told to disconnect your account. The change should take effect shortly.</p>
     </main>
@@ -2524,7 +2524,7 @@ function serveUserPage (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <img
           class=avatar
           src="${gravatar.url(data.email, { size: 200, rating: 'pg', protocol: 'https' })}">
@@ -2630,7 +2630,7 @@ function serveBadges (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>User Badges</h2>
       <ul class=badges>${
         accountBadges.map(badge => `<li>${badgeImage(badge)}</li>`)
@@ -2721,7 +2721,7 @@ function serveProjectForDeveloper (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <a href="/~${slug}?preview=true">View as Customer</a>
       ${badgesList(data.projectObject)}
@@ -2862,7 +2862,7 @@ function serveProjectForCustomers (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${data.project}</h2>
       <p class=tagline>${escapeHTML(data.tagline)}</p>
       <p class=byline>by <a class=handle href=/~${handle}>${handle}</a></p>
@@ -3149,7 +3149,7 @@ function serveBuy (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       ${buyForm(data)}
     </main>
@@ -3363,7 +3363,7 @@ Payment Intent: ${paymentIntent.id}
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>Success</h2>
       <p class=message>Thank you for buying a license! As soon as your payment clears, you will receive an e-mail with your license and receipt.</p>
     </main>
@@ -3387,7 +3387,7 @@ function servePricing (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <h3>Buying</h3>
       <p>Developers set their own prices through ${constants.website}.</p>
@@ -4074,7 +4074,7 @@ function serve404 (request, response) {
   <body>
     ${nav(request)}
     ${header}
-    <main role=main>
+    <main>
       <h2>${title}</h2>
       <p>The page you tried to visit doesn’t exist on this site.</p>
     </main>
@@ -4097,7 +4097,7 @@ function serve500 (request, response, error) {
     <title>${title}</title>
   </head>
   <body>
-    <main role=main>
+    <main>
       <h1>${title}</h1>
       <p>The server ran into an error.</p>
       <p>
