@@ -29,7 +29,7 @@ body {
     display: none;
   }
 
-  a::after {
+  body > main a::after {
     content: " (" attr(href) ") ";
   }
 }
