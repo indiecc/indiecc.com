@@ -33,7 +33,7 @@
     "run-series": "^1.1.9",
     "secure-password": "^4.0.0",
     "semver": "^7.3.5",
-    "send": "^0.17.1",
+    "send": "^0.17.2",
     "simple-concat-limit": "^2.0.3",
     "split2": "^3.2.2",
     "stripe": "^8.178.0",
