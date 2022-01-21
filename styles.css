@@ -28,6 +28,10 @@ body {
   body > footer {
     display: none;
   }
+
+  a::after {
+    content: " (" attr(href) ") ";
+  }
 }
 
 body > header {
