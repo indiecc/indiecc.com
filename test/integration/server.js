@@ -63,11 +63,17 @@ export default (callback, port) => {
       runSeries([
         function setWebhookSecret (done) {
           const stripeSecret = spawn('stripe', ['listen', '--print-secret'])
+          stripeSecret.once('exit', code => {
+            if (code !== 0) {
+              process.stderr.write(`stripe listen --print-secret exited ${code}\n`)
+              process.exit(1)
+            }
+            done()
+          })
           simpleConcat(stripeSecret.stdout, (_, buffer) => {
             const secret = buffer.toString().trim()
             process.env.STRIPE_WEBHOOK_SECRET = secret
             logger.info({ secret }, 'Stripe webhook secret')
-            done()
           })
         },
         function listenForEvents (done) {
