@@ -39,7 +39,7 @@
     "stripe": "^9.13.0",
     "through2": "^4.0.2",
     "toobusy-js": "^0.5.1",
-    "url-parse": "^1.5.4",
+    "url-parse": "^1.5.10",
     "url-regex-safe": "^3.0.0",
     "uuid": "^8.3.2"
   },
