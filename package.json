@@ -47,7 +47,7 @@
     "depcheck": "^1.4.3",
     "licensee": "^8.2.0",
     "nyc": "^15.1.0",
-    "parse5": "^6.0.1",
+    "parse5": "^7.0.0",
     "playwright": "^1.23.4",
     "rimraf": "^3.0.2",
     "simple-concat": "^1.0.1",

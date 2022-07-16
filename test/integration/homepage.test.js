@@ -1,5 +1,5 @@
 import http from 'http'
-import parse5 from 'parse5'
+import { parse } from 'parse5'
 import runSeries from 'run-series'
 import server from './server.js'
 import simpleConcat from 'simple-concat'
@@ -31,7 +31,7 @@ tap.test('homepage', test => {
           simpleConcat(response, (error, buffer) => {
             test.error(error, 'no concat error')
             const string = buffer.toString()
-            test.doesNotThrow(() => parse5.parse(string), 'valid HTML5')
+            test.doesNotThrow(() => parse(string), 'valid HTML5')
             test.ok(
               string.includes(`href=/~${handle}/${project}`),
               'links to showcased'
