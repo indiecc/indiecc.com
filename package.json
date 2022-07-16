@@ -52,7 +52,7 @@
     "rimraf": "^3.0.2",
     "simple-concat": "^1.0.1",
     "sodium-native": "^3.3.0",
-    "standard": "^16.0.4",
+    "standard": "^17.0.0",
     "tap": "^16.3.0"
   },
   "tap": {
