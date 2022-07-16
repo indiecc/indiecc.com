@@ -32,7 +32,7 @@
     "run-parallel-limit": "^1.0.6",
     "run-series": "^1.1.9",
     "secure-password": "^4.0.0",
-    "semver": "^7.3.5",
+    "semver": "^7.3.7",
     "send": "^0.17.2",
     "simple-concat-limit": "^2.0.3",
     "split2": "^4.1.0",
